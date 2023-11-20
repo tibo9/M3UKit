@@ -33,9 +33,10 @@ final class PlaylistParserTests: XCTestCase {
     let playlist = try parser.parse(validURL)
     XCTAssertEqual(playlist.medias.count, 106)
     XCTAssertEqual(playlist.medias[0].name, "TV SHOW")
-    XCTAssertEqual(playlist.medias[0].attributes.name, "TV SHOW")
+    XCTAssertEqual(playlist.medias[0].attributes.name, "TV FHD SHOW")
     XCTAssertEqual(playlist.medias[0].attributes.seasonNumber, 1)
     XCTAssertEqual(playlist.medias[0].attributes.episodeNumber, 1)
+    XCTAssertEqual(playlist.medias[0].attributes.quality, "FHD")
 
     let invalidURL = Bundle.module.url(forResource: "invalid", withExtension: "m3u")!
     XCTAssertThrowsError(try parser.parse(invalidURL))

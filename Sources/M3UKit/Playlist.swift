@@ -53,7 +53,8 @@ public struct Playlist: Equatable, Hashable, Codable {
         shift: String? = nil,
         groupTitle: String? = nil,
         seasonNumber: Int? = nil,
-        episodeNumber: Int? = nil
+        episodeNumber: Int? = nil,
+        quality: String? = nil
       ) {
         self.id = id
         self.name = name
@@ -65,6 +66,7 @@ public struct Playlist: Equatable, Hashable, Codable {
         self.groupTitle = groupTitle
         self.seasonNumber = seasonNumber
         self.episodeNumber = episodeNumber
+          self.quality = quality
       }
 
       /// tvg-id.
@@ -96,6 +98,9 @@ public struct Playlist: Equatable, Hashable, Codable {
 
       /// Episode number (for TV shows).
       public var episodeNumber: Int?
+        
+        /// Quality
+        public var quality: String?
     }
 
     /// Enum representing media kind.
