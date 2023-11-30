@@ -198,7 +198,7 @@ extension Playlist.Media.Quality
     {
         switch rawValue.uppercased()
         {
-        case "4K", "UHD": self = .uhd
+        case "4K", "HDR": self = .uhd
         case "FULL HD": self = .fhd
         default: self = Self.init(rawValue: rawValue.lowercased()) ?? .unknown
         }
