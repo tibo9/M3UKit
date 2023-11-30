@@ -24,46 +24,46 @@
 import Foundation
 
 internal struct RegularExpression {
-  internal let regex: NSRegularExpression
-
-  internal init(_ regex: NSRegularExpression) {
-    self.regex = regex
-  }
-
-  internal func numberOfMatches(source: String) -> Int {
-    let sourceRange = NSRange(source.startIndex..<source.endIndex, in: source)
-    return regex.numberOfMatches(in: source, range: sourceRange)
-  }
-
-  internal func firstMatch(in source: String) -> String? {
-    let sourceRange = NSRange(source.startIndex..<source.endIndex, in: source)
-    guard
-      let match = regex.firstMatch(in: source, range: sourceRange),
-      let range = Range(match.range(at: 1), in: source)
-    else {
-      return nil
+    internal let regex: NSRegularExpression
+    
+    internal init(_ regex: NSRegularExpression) {
+        self.regex = regex
     }
-    return String(source[range])
-  }
-
-  internal func matchingRanges(in source: String) -> [Range<String.Index>] {
-    let sourceRange = NSRange(source.startIndex..<source.endIndex, in: source)
-    guard let match = regex.firstMatch(in: source, range: sourceRange) else {
-      return []
+    
+    internal func numberOfMatches(source: String) -> Int {
+        let sourceRange = NSRange(source.startIndex..<source.endIndex, in: source)
+        return regex.numberOfMatches(in: source, range: sourceRange)
     }
-    return (0..<match.numberOfRanges)
-      .compactMap {
-        match.range(at: $0)
-      }
-      .compactMap {
-        Range($0, in: source)
-      }
-  }
+    
+    internal func firstMatch(in source: String) -> String? {
+        let sourceRange = NSRange(source.startIndex..<source.endIndex, in: source)
+        guard
+            let match = regex.firstMatch(in: source, range: sourceRange),
+            let range = Range(match.range(at: 1), in: source)
+        else {
+            return nil
+        }
+        return String(source[range])
+    }
+    
+    internal func matchingRanges(in source: String) -> [Range<String.Index>] {
+        let sourceRange = NSRange(source.startIndex..<source.endIndex, in: source)
+        guard let match = regex.firstMatch(in: source, range: sourceRange) else {
+            return []
+        }
+        return (0..<match.numberOfRanges)
+            .compactMap {
+                match.range(at: $0)
+            }
+            .compactMap {
+                Range($0, in: source)
+            }
+    }
 }
 
 extension RegularExpression: ExpressibleByStringLiteral {
-  internal init(stringLiteral value: String) {
-    let regex = try! NSRegularExpression(pattern: value, options: [])
-    self.init(regex)
-  }
+    internal init(stringLiteral value: String) {
+        let regex = try! NSRegularExpression(pattern: value, options: [])
+        self.init(regex)
+    }
 }
