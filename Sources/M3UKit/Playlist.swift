@@ -54,7 +54,7 @@ public struct Playlist: Equatable, Hashable, Codable {
         groupTitle: String? = nil,
         seasonNumber: Int? = nil,
         episodeNumber: Int? = nil,
-        quality: String? = nil
+        quality: Quality? = nil
       ) {
         self.id = id
         self.name = name
@@ -100,7 +100,7 @@ public struct Playlist: Equatable, Hashable, Codable {
       public var episodeNumber: Int?
         
         /// Quality
-        public var quality: String?
+        public var quality: Quality?
     }
 
     /// Enum representing media kind.
@@ -110,6 +110,25 @@ public struct Playlist: Equatable, Hashable, Codable {
       case live
       case unknown
     }
+      
+      public enum Quality: String, Codable {
+          case sd
+          case hd
+          case fhd
+          case uhd
+          case hevc
+          case unknown
+          
+          static func from(rawQuality: String) -> Quality
+          {
+              if rawQuality.uppercased() == "4K"
+              {
+                  return .uhd
+              }
+              let quality = Quality(rawValue: rawQuality.lowercased())
+              return quality ?? .unknown
+          }
+      }
 
     internal typealias Metadata = (
       duration: Int,

@@ -60,46 +60,11 @@ public final class PlaylistParser {
   /// - Parameter input: source.
   /// - Returns: playlist.
   public func parse(_ input: PlaylistSource) throws -> Playlist {
-    let rawString = try extractRawString(from: input)
-
+    
     var medias: [Playlist.Media] = []
-
-    var lastMetadataLine: String?
-    var lastURL: URL?
-    var mediaMetadataParsingError: Error?
-    var lineNumber = 0
-
-    rawString.enumerateLines { [weak self] line, stop in
-      guard let self else {
-        stop = true
-        return
-      }
-
-      if self.isInfoLine(line) {
-        lastMetadataLine = line
-      } else if let url = URL(string: line) {
-        lastURL = url
-      }
-
-      if let metadataLine = lastMetadataLine, let url = lastURL {
-        do {
-          let metadata = try self.parseMetadata(line: lineNumber, rawString: metadataLine, url: url)
-          let kind = self.parseMediaKind(url)
-          medias.append(.init(metadata: metadata, kind: kind, url: url))
-          lastMetadataLine = nil
-          lastURL = nil
-        } catch {
-          mediaMetadataParsingError = error
-          stop = true
-        }
-      }
-
-      lineNumber += 1
-    }
-
-    if let error = mediaMetadataParsingError {
-      throw error
-    }
+    try walk(input, handler: {
+        medias.append($0)
+    })
 
     return Playlist(medias: medias)
   }
@@ -272,6 +237,9 @@ public final class PlaylistParser {
     if id.isEmpty && options.contains(.extractIdFromURL) {
       attributes.id = extractId(url)
     }
+      if let quality = nameQualityRegex.firstMatch(in: rawString) {
+          attributes.quality = Playlist.Media.Quality.from(rawQuality: quality)
+      }
     if let name = attributesNameRegex.firstMatch(in: rawString) {
       let show = parseSeasonEpisode(name)
       attributes.name = show.name
@@ -296,9 +264,6 @@ public final class PlaylistParser {
     if let groupTitle = attributesGroupTitleRegex.firstMatch(in: rawString) {
       attributes.groupTitle = groupTitle
     }
-      if let quality = nameQualityRegex.firstMatch(in: rawString) {
-          attributes.quality = quality
-      }
     return attributes
   }
 
@@ -338,5 +303,5 @@ public final class PlaylistParser {
   internal let attributesShiftRegex: RegularExpression = #"tvg-shift=\"(.?|.+?)\""#
   internal let attributesGroupTitleRegex: RegularExpression = #"group-title=\"(.?|.+?)\""#
     
-    internal let nameQualityRegex: RegularExpression = #"\b(HD|FHD|4K|HEVC|SD)\b"#
+    internal let nameQualityRegex: RegularExpression = #"\b(HD|FHD|4K|UHD|HEVC|SD)\b"#
 }
