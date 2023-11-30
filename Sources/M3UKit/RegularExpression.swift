@@ -59,6 +59,13 @@ internal struct RegularExpression {
                 Range($0, in: source)
             }
     }
+    
+    internal func replaceMatches(in source: String, with template: String) -> String {
+        let sourceRange = NSRange(source.startIndex..<source.endIndex, in: source)
+        var new = regex.stringByReplacingMatches(in: source, range: sourceRange, withTemplate: template)
+        new = new.replacingOccurrences(of: "  ", with: " ")
+        return new.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
 }
 
 extension RegularExpression: ExpressibleByStringLiteral {

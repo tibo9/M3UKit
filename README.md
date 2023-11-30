@@ -103,6 +103,8 @@ Attributes
 ├── groupTitle (group-title)
 ├── seasonNumber
 └── episodeNumber
+└── quality (sd, hd, fhd, uhd, hevc, unknown)
+└── trimmedName (name trimmed of quality info)
 ```
 
 ```

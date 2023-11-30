@@ -233,6 +233,7 @@ public final class PlaylistParser {
     internal func parseAttributes(rawString: String, url: URL) -> Playlist.Media.Attributes {
         var attributes = Playlist.Media.Attributes()
         let id = attributesIdRegex.firstMatch(in: rawString) ?? ""
+        let name = attributesNameRegex.firstMatch(in: rawString)
         attributes.id = id
         if id.isEmpty && options.contains(.extractIdFromURL) {
             attributes.id = extractId(url)
@@ -240,7 +241,7 @@ public final class PlaylistParser {
         if let quality = nameQualityRegex.firstMatch(in: rawString) {
             attributes.quality = Playlist.Media.Quality(quality)
         }
-        if let name = attributesNameRegex.firstMatch(in: rawString) {
+        if let name {
             let show = parseSeasonEpisode(name)
             attributes.name = show.name
             attributes.seasonNumber = show.se?.s
@@ -264,6 +265,13 @@ public final class PlaylistParser {
         if let groupTitle = attributesGroupTitleRegex.firstMatch(in: rawString) {
             attributes.groupTitle = groupTitle
         }
+        
+        if let fullname = nameRegex.firstMatch(in: rawString) ?? name
+        {
+            let name = parseSeasonEpisode(fullname).name
+            attributes.trimmedName = nameFullQualityRegex.replaceMatches(in: name, with: "")
+        }
+        
         return attributes
     }
     
@@ -304,4 +312,5 @@ public final class PlaylistParser {
     internal let attributesGroupTitleRegex: RegularExpression = #"group-title=\"(.?|.+?)\""#
     
     internal let nameQualityRegex: RegularExpression = #"\b(HD|FHD|4K|UHD|HEVC|SD)\b"#
+    internal let nameFullQualityRegex: RegularExpression = #"(\b(?:HD|FHD|4K|UHD|HEVC|SD)\b(?: \(\d+p\))?)"#
 }
