@@ -312,5 +312,5 @@ public final class PlaylistParser {
     internal let attributesGroupTitleRegex: RegularExpression = #"group-title=\"(.?|.+?)\""#
     
     internal let nameQualityRegex: RegularExpression = #"\b(HD|FHD|4K|UHD|HEVC|SD)\b"#
-    internal let nameFullQualityRegex: RegularExpression = #"(\b(?:HD|FHD|4K|UHD|HEVC|SD)\b(?: \(\d+p\))?)"#
+    internal let nameFullQualityRegex: RegularExpression = #"(\b(?:HD|FHD|4K|UHD|HEVC|SD)\b(?: \(.*\))?)"#
 }
