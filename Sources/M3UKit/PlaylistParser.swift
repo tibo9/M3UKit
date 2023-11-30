@@ -238,7 +238,7 @@ public final class PlaylistParser {
       attributes.id = extractId(url)
     }
       if let quality = nameQualityRegex.firstMatch(in: rawString) {
-          attributes.quality = Playlist.Media.Quality.from(rawQuality: quality)
+          attributes.quality = Playlist.Media.Quality(quality)
       }
     if let name = attributesNameRegex.firstMatch(in: rawString) {
       let show = parseSeasonEpisode(name)

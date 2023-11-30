@@ -111,24 +111,14 @@ public struct Playlist: Equatable, Hashable, Codable {
       case unknown
     }
       
-      public enum Quality: String, Codable {
-          case sd
-          case hd
-          case fhd
-          case uhd
-          case hevc
-          case unknown
-          
-          static func from(rawQuality: String) -> Quality
-          {
-              if rawQuality.uppercased() == "4K"
-              {
-                  return .uhd
-              }
-              let quality = Quality(rawValue: rawQuality.lowercased())
-              return quality ?? .unknown
-          }
-      }
+    public enum Quality: String, Codable {
+        case sd
+        case hd
+        case fhd
+        case uhd
+        case hevc
+        case unknown
+    }
 
     internal typealias Metadata = (
       duration: Int,
@@ -195,4 +185,17 @@ public struct Playlist: Equatable, Hashable, Codable {
 
   /// Medias.
   public var medias: [Media]
+}
+
+extension Playlist.Media.Quality
+{
+    init(_ rawValue: String)
+    {
+        switch rawValue.uppercased()
+        {
+            case "4K": self = .uhd
+            case "Full HD": self = .fhd
+            default: self = Self.init(rawValue: rawValue) ?? .unknown
+        }
+    }
 }
